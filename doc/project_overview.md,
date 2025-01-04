@@ -1,0 +1,191 @@
+# Projeto: Conversão Celsius para Fahrenheit com Rede Neural
+
+## Descrição Geral
+Este projeto utiliza uma **Rede Neural Simples** com TensorFlow para aprender a conversão entre temperaturas em **Celsius** e **Fahrenheit**. A fórmula usada é a conhecida:
+
+\[
+T(°F) = T(°C) \times \frac{9}{5} + 32
+\]
+
+O objetivo é ensinar uma rede neural a prever essa conversão sem explicitamente programá-la.
+
+---
+
+## Estrutura do Código
+O código é organizado em funções para modularidade e clareza:
+
+1. **Carregamento e exploração de dados**: Leitura e análise de um arquivo CSV.
+2. **Visualização dos dados**: Geração de um gráfico para entender a relação entre Celsius e Fahrenheit.
+3. **Treinamento do modelo**: Configuração, treinamento e otimização da rede neural.
+4. **Avaliação do modelo**: Visualização da performance do modelo durante o treinamento.
+5. **Previsão**: Uso do modelo treinado para fazer previsões.
+
+---
+
+## Detalhamento por Seções
+
+### 1. Importação de Bibliotecas
+```python
+import tensorflow as tf
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import logging
+
+
+Aqui está o documento completo com todas as seções organizadas e formatadas em Markdown, com cabeçalhos estruturados para facilitar a navegação:
+
+markdown
+Copiar código
+# Projeto: Conversão Celsius para Fahrenheit com Rede Neural
+
+## 1. Descrição Geral
+Este projeto utiliza uma **Rede Neural Simples** com TensorFlow para aprender a conversão entre temperaturas em **Celsius** e **Fahrenheit**. A fórmula usada é a conhecida:
+
+\[
+T(°F) = T(°C) \times \frac{9}{5} + 32
+\]
+
+O objetivo é ensinar uma rede neural a prever essa conversão sem explicitamente programá-la.
+
+---
+
+## 2. Estrutura do Código
+O código é organizado em funções para modularidade e clareza:
+
+1. **Carregamento e exploração de dados**: Leitura e análise de um arquivo CSV.
+2. **Visualização dos dados**: Geração de um gráfico para entender a relação entre Celsius e Fahrenheit.
+3. **Treinamento do modelo**: Configuração, treinamento e otimização da rede neural.
+4. **Avaliação do modelo**: Visualização da performance do modelo durante o treinamento.
+5. **Previsão**: Uso do modelo treinado para fazer previsões.
+
+
+## Detalhamento por Seções
+
+### 3.1 Importação de Bibliotecas
+```python
+import tensorflow as tf
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import logging
+
+
+TensorFlow: Para criar e treinar a rede neural.
+Pandas: Para carregar e manipular os dados.
+NumPy: Para operações matemáticas.
+Seaborn e Matplotlib: Para criar gráficos.
+Logging: Para registrar mensagens de execução no terminal.
+
+### 3.2 Configuração do Logger
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
+
+O logger registra eventos importantes no terminal, como carregamento de dados e progresso do treinamento.
+
+### 3.3 Função load_and_explorer_data
+
+def load_and_explore_data(file_path):
+    try:
+        data = pd.read_csv(file_path)
+        logging.info(f"Dados carregados com sucesso do arquivo: {file_path}")
+        logging.info(f"Resumo dos dados: \n{data.info()}")
+        return data
+    except Exception as e:
+        logging.error(f"Erro ao carregar os dados: {e}")
+        raise
+
+Entrada: Caminho do arquivo CSV.
+Saída: DataFrame com os dados carregados.
+
+### 3.4 Função visualize_data
+
+def visualize_data(data):
+    sns.scatterplot(x=data['Celsius'], y=data['Fahrenheit'])
+    plt.title('Celsius vs Fahrenheit')
+    plt.xlabel('Celsius')
+    plt.ylabel('Fahrenheit')
+    plt.show()
+
+Cria um gráfico para visualizar a relação entre Celsius e Fahrenheit.
+
+### 3.5 Função train_model
+
+def train_model(X, y, learning_rate=0.1, epochs=500):
+    model = tf.keras.Sequential()
+    model.add(tf.keras.layers.Dense(units=1, input_shape=[1]))
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate), loss='mean_squared_error')
+    history = model.fit(X, y, epochs=epochs, verbose=0)
+    logging.info("Treinamento concluído")
+    return model, history
+
+Cria, compila e treina a rede neural. No caso aqui estamos treinando com 500 epócas.
+
+
+### 3.6 Função evalute_model
+
+def evaluate_model(history):
+    plt.plot(history.history['loss'])
+    plt.title('Progresso da Perda do Modelo Durante o Treinamento')
+    plt.xlabel('Época')
+    plt.ylabel('Perda')
+    plt.legend(['Perda de Treinamento'])
+    plt.show()
+
+Plota a perda ao longo das épocas para avaliar o progresso.
+
+
+### 3.7 Função predict_temperature
+
+def predict_temperature(model, temp_c):
+    temp_f = model.predict(np.array([temp_c]))
+    return temp_f[0][0]
+
+Faz previsões com base no modelo treinado
+
+### 3.8 EXecução Principal
+
+if __name__ == "__main__":
+    # Caminho para o arquivo CSV
+    file_path = '../data/Celsius-to-Fahrenheit.csv'
+
+    # Etapa 1: Carregar e explorar os dados
+    temperature_data = load_and_explore_data(file_path)
+    visualize_data(temperature_data)
+
+    # Etapa 2: Configuração dos dados
+    X_train = temperature_data['Celsius']
+    y_train = temperature_data['Fahrenheit']
+
+    # Etapa 3: Treinamento do modelo
+    model, training_history = train_model(X_train, y_train)
+
+    # Etapa 4: Avaliação do modelo
+    evaluate_model(training_history)
+
+    # Etapa 5: Previsão
+    test_temp_c = 10  # exemplo de teste
+    predicted_temp_f = predict_temperature(model, test_temp_c)
+    logging.info(f"Temperatura prevista para {test_temp_c}°C: {predicted_temp_f:.2f}°F")
+
+Etapas principais:
+Carrega os dados.
+Visualiza a relação entre Celsius e Fahrenheit.
+Treina a rede neural.
+Avalia o progresso do modelo.
+Faz previsões usando o modelo treinado.
+
+## 4. Fluxo Geral
+
+1. Carrega os dados do arquivo CSV.
+2. Visualiza a relação entre Celsius e Fahrenheit.
+3. Treina o modelo para aprender a conversão.
+4. Avalia o progresso do treinamento.
+5. Faz previsões com o modelo treinado.
+
+## 5. Autor
+
+Nome: Alencar Porto 
+Data: 03/01/2025
